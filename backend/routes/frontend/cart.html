@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Place Order</h2>
+
+<input id="user_id" placeholder="User ID"><br><br>
+<input id="total" placeholder="Total Amount"><br><br>
+
+<button onclick="order()">Place Order</button>
+
+<script>
+function order() {
+    fetch('http://127.0.0.1:5000/order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            user_id: document.getElementById('user_id').value,
+            total: document.getElementById('total').value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message));
+}
+</script>
+
+</body>
+</html>

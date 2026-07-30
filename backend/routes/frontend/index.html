@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>samrt canteen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f6f8;
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            background: white;
+            height: 100vh;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ff5a1f;
+            margin-bottom: 40px;
+        }
+
+        .menu-item {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .menu-item.active {
+            background: linear-gradient(to right, #ff7e5f, #ff5a1f);
+            color: white;
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            padding: 20px 30px;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .search {
+            width: 60%;
+            padding: 12px;
+            border-radius: 30px;
+            border: none;
+            background: #eee;
+        }
+
+        .profile {
+            font-weight: 500;
+        }
+
+        /* HERO */
+        .hero {
+            display: flex;
+            justify-content: space-between;
+            background: #ffe9dc;
+            padding: 30px;
+            border-radius: 20px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .hero button {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background: #ff5a1f;
+            color: white;
+            cursor: pointer;
+        }
+
+        .hero img {
+            width: 200px;
+        }
+
+        /* ITEMS */
+        .section-title {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .card h4 {
+            margin: 10px 0 5px;
+        }
+
+        .price {
+            color: #ff5a1f;
+            font-weight: 600;
+        }
+
+        .add-btn {
+            float: right;
+            background: #ff5a1f;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+
+        /* CART */
+        .cart {
+            width: 300px;
+            background: white;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .checkout {
+            background: #ff5a1f;
+            color: white;
+            padding: 12px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="logo">🍽 Smart Canteen</div>
+
+    <div class="menu-item active">🏠 Home</div>
+    <div class="menu-item">📋 Menu</div>
+    <div class="menu-item">📦 Orders</div>
+    <div class="menu-item">❤️ Favorites</div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <!-- TOP -->
+    <div class="topbar">
+        <input class="search" placeholder="Search food...">
+        <div class="profile">Hi, Arjun 👋</div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div>
+            <h1>Welcome to Smart Canteen</h1>
+            <p>Delicious meals anytime 😋</p>
+            <button>Order Now →</button>
+        </div>
+        <img src="https://images.unsplash.com/photo-1604908176997-4317c9a68b0e?w=400">
+    </div>
+
+    <!-- ITEMS -->
+    <div class="section-title">Popular Items</div>
+
+    <div class="items" id="menu"></div>
+
+</div>
+
+<!-- CART -->
+<div class="cart">
+    <h3>Your Cart</h3>
+    <div id="cart"></div>
+
+    <h3>Total: ₹<span id="total">0</span></h3>
+
+    <div class="checkout" onclick="placeOrder()">Proceed to Checkout</div>
+</div>
+
+<script>
+
+let cart = [];
+let total = 0;
+
+const foodItems = [
+    {id:1,name:"Veg Biryani",price:120,img:"https://images.unsplash.com/photo-1604908176997-4317c9a68b0e?w=400"},
+    {id:2,name:"Paneer Butter Masala",price:140,img:"https://images.unsplash.com/photo-1605475127953-7bba5d6d6c5d?w=400"},
+    {id:3,name:"Chicken Burger",price:80,img:"https://images.unsplash.com/photo-1550547660-d9450f859349?w=400"},
+    {id:4,name:"Veg Noodles",price:100,img:"https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400"},
+];
+
+let html = "";
+
+foodItems.forEach(item => {
+    html += `
+    <div class="card">
+        <img src="${item.img}">
+        <h4>${item.name}</h4>
+        <div class="price">₹${item.price}
+            <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">+</button>
+        </div>
+    </div>`;
+});
+
+document.getElementById("menu").innerHTML = html;
+
+function addToCart(name, price){
+    cart.push({name, price});
+    total += price;
+
+    updateCart();
+}
+
+function updateCart(){
+    let html = "";
+    cart.forEach(item => {
+        html += `<div class="cart-item">${item.name} - ₹${item.price}</div>`;
+    });
+
+    document.getElementById("cart").innerHTML = html;
+    document.getElementById("total").innerText = total;
+}
+
+function placeOrder(){
+    alert("✅ Order Placed Successfully!");
+    cart = [];
+    total = 0;
+    updateCart();
+}
+
+</script>
+
+</body>
+</html>

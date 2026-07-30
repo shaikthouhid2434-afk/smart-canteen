@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+</head>
+<body>
+
+<h1>Admin Panel</h1>
+
+<h2>Add Item</h2>
+<input id="name" placeholder="Item name">
+<input id="price" placeholder="Price">
+<button onclick="addItem()">Add</button>
+
+<h2>Orders</h2>
+<div id="orders"></div>
+
+<script>
+// Add menu item
+function addItem(){
+    fetch('http://127.0.0.1:5000/menu/add', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            price: document.getElementById('price').value
+        })
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message));
+}
+
+// Get orders
+fetch('http://127.0.0.1:5000/orders')
+.then(res => res.json())
+.then(data => {
+    let html = '';
+    data.forEach(order => {
+        html += `<p>Order ID: ${order.id} | Total: ₹${order.total}</p>`;
+    });
+    document.getElementById('orders').innerHTML = html;
+});
+</script>
+
+</body>
+</html>

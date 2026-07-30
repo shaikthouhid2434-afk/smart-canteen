@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f8f8f8;
+            margin: 0;
+        }
+
+        h1 {
+            background: #ff5722;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card img {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+        }
+
+        .card button {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .card button:hover {
+            background: #e64a19;
+        }
+
+        .bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .bottom button {
+            background: green;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🍔 Menu</h1>
+
+<div class="menu" id="menu"></div>
+
+<div class="bottom">
+    Total: ₹<span id="total">0</span>
+    <br><br>
+    <button onclick="goToCart()">Go to Cart 🛒</button>
+</div>
+
+<script>
+let cart = [];
+let total = 0;
+
+const items = [
+    {name:"Chicken Biryani", price:150, img:"https://images.unsplash.com/photo-1604908176997-4313b92c7c2d"},
+    {name:"Veg Biryani", price:120, img:"https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a"},
+    {name:"Egg Biryani", price:130, img:"https://images.unsplash.com/photo-1627308595229-7830a5c91f9f"},
+    {name:"Noodles", price:90, img:"https://images.unsplash.com/photo-1585032226651-759b368d7246"},
+    {name:"Chicken Noodles", price:120, img:"https://images.unsplash.com/photo-1603133872878-684f208fb84b"},
+    {name:"Veg Noodles", price:80, img:"https://images.unsplash.com/photo-1589308078056-fb1c4b6a9f71"},
+    {name:"Fried Rice", price:100, img:"https://images.unsplash.com/photo-1604909052743-94e838986d24"},
+    {name:"Chicken Fried Rice", price:130, img:"https://images.unsplash.com/photo-1625944525903-bb5a0e1b7e9f"},
+    {name:"Paneer Butter Masala", price:140, img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7"},
+    {name:"Butter Chicken", price:160, img:"https://images.unsplash.com/photo-1603894584373-5ac82b2ae398"},
+    {name:"Tandoori Chicken", price:180, img:"https://images.unsplash.com/photo-1598514982455-8f2d7f3d9f1d"},
+    {name:"Parotta", price:30, img:"https://images.unsplash.com/photo-1626078299034-6c1d8f6a0e47"},
+    {name:"Chicken Curry", price:120, img:"https://images.unsplash.com/photo-1604908177522-402dfc9c6a9c"},
+    {name:"Veg Meals", price:100, img:"https://images.unsplash.com/photo-1596797038530-2c107229654b"},
+    {name:"Chicken Meals", price:150, img:"https://images.unsplash.com/photo-1604908176997-4313b92c7c2d"},
+    {name:"Burger", price:60, img:"https://images.unsplash.com/photo-1550547660-d9450f859349"},
+    {name:"Pizza", price:120, img:"https://images.unsplash.com/photo-1548365328-5b849a4f91b2"},
+    {name:"Sandwich", price:50, img:"https://images.unsplash.com/photo-1553909489-cd47e0ef937f"},
+    {name:"French Fries", price:70, img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877"},
+    {name:"Ice Cream", price:40, img:"https://images.unsplash.com/photo-1501443762994-82bd5dace89a"},
+    {name:"Cold Coffee", price:80, img:"https://images.unsplash.com/photo-1509042239860-f550ce710b93"},
+    {name:"Lemon Juice", price:30, img:"https://images.unsplash.com/photo-1558640479-8235f3a6f7a7"},
+    {name:"Milkshake", price:90, img:"https://images.unsplash.com/photo-1577805947697-89e18249d767"},
+    {name:"Tea", price:20, img:"https://images.unsplash.com/photo-1511920170033-f8396924c348"},
+    {name:"Samosa", price:15, img:"https://images.unsplash.com/photo-1601050690597-df0568f70950"}
+];
+
+let html = "";
+
+items.forEach((item, index) => {
+    html += `
+        <div class="card">
+            <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300x200?text=Food'">
+            <h3>${item.name}</h3>
+            <p>₹${item.price}</p>
+            <button onclick="addToCart(${index})">Add</button>
+        </div>
+    `;
+});
+
+document.getElementById("menu").innerHTML = html;
+
+function addToCart(index){
+    cart.push(items[index]);
+    total += items[index].price;
+    document.getElementById("total").innerText = total;
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function goToCart(){
+    window.location.href = "cart.html";
+}
+</script>
+
+</body>
+</html>
